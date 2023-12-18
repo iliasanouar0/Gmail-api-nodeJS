@@ -28,16 +28,7 @@ async function sendMail(req, res) {
         const mailOptions = {
             ...CONSTANTS.mailoptions,
             text: "The Gmail API with NodeJS works",
-            bcc: ["dlanda0@t-online.de",
-                "alyven1@jigsy.com",
-                "daxel2@flickr.com",
-                "ilurcock3@photobucket.com",
-                " gmcgeouch4@who.int",
-                "ejilkes5@miibeian.gov.cn",
-                "bnightingale6@amazon.co.uk",
-                "aforgan7@slashdot.org",
-                "swyer8@noaa.gov",
-                "lwoodier9@sitemeter.com"]
+            bcc: ["zaidiyounesios@gmail.com"]
         };
 
         const result = await transport.sendMail(mailOptions);

@@ -9,7 +9,7 @@ const auth = {
 };
 
 const mailoptions = {
-  from: "THE-ONE <iliasanouar0@gmail.com>",
+  from: "THE-ONE <iliaanouar0@gmail.com>",
   to: "ilyasanouar01@gmail.com",
   subject: "Gmail API NodeJS",
 };
