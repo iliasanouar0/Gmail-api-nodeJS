@@ -1,20 +1,21 @@
 require("dotenv").config();
 
 const auth = {
-  type: "OAuth2",
-  user: "iliasanouar0@gmail.com",
-  clientId: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
-  refreshToken: process.env.REFRESH_TOKEN,
+    type: "OAuth2",
+    user: "ilyasanouar01@gmail.com",
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    refreshToken: process.env.REFRESH_TOKEN,
+    apiKey: process.env.API_KEY
 };
 
 const mailoptions = {
-  from: "THE-ONE <iliaanouar0@gmail.com>",
-  to: "ilyasanouar01@gmail.com",
-  subject: "Gmail API NodeJS",
+    from: "THE-ONE <ilyasanouar01@gmail.com>",
+    to: "iliasanouar0@gmail.com",
+    subject: "Gmail API NodeJS",
 };
 
 module.exports = {
-  auth,
-  mailoptions,
+    auth,
+    mailoptions,
 };
