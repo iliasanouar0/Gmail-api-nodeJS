@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { generateConfig } = require("./utils");
+const { generateConfig } = require("../utils");
 const nodemailer = require("nodemailer");
 const CONSTANTS = require("./constants");
 const { google } = require("googleapis");
