@@ -18,6 +18,6 @@ app.get("/", async (req, res) => {
       return e
     }
     console.log(d);
-    res.send(d);
+    res.send(d.toString());
   })
 });
