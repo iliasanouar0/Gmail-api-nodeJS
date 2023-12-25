@@ -12,7 +12,6 @@ const oAuth2Client = new google.auth.OAuth2(
     process.env.REDIRECT_URI
 );
 
-oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 
 async function sendMail(req, res) {
     try {
@@ -56,7 +55,6 @@ async function getUser(req, res) {
 
 async function getDrafts(req, res) {
     try {
-        oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
         const url = `https://gmail.googleapis.com/gmail/v1/users/${req.params.email}/drafts`;
         const { token } = await oAuth2Client.getAccessToken();
         const config = generateConfig(url, token);
@@ -70,7 +68,6 @@ async function getDrafts(req, res) {
 
 async function readMail(req, res) {
     try {
-        oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
         const url = `https://gmail.googleapis.com/gmail/v1/users/iliasanouar0@gmail.com/messages/${req.params.messageId}`;
         const { token } = await oAuth2Client.getAccessToken();
         const config = generateConfig(url, token);
