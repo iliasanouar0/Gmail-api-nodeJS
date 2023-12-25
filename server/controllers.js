@@ -12,6 +12,7 @@ const oAuth2Client = new google.auth.OAuth2(
     process.env.REDIRECT_URI
 );
 
+oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 
 async function sendMail(req, res) {
     try {
@@ -41,7 +42,6 @@ async function sendMail(req, res) {
 
 async function getUser(req, res) {
     try {
-        oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
         const url = `https://gmail.googleapis.com/gmail/v1/users/${req.params.email}/profile`;
         const { token } = await oAuth2Client.getAccessToken();
         console.log(token);
