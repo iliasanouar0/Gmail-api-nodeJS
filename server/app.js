@@ -12,7 +12,7 @@ app.listen(process.env.PORT, () => {
 });
 
 app.get("/", async (req, res) => {
-  fs.readFile('/client/index.js', (e, d) => {
+  fs.readFile('./client/index.js', (e, d) => {
     if (e) {
       res.status(500).send(e)
       return e
