@@ -1,4 +1,5 @@
 const root = document.getElementById('root')
+const list = document.querySelector('.list')
 let REDIRECT_URI = location.href.split('/')[location.href.split('/').length - 1]
 console.log(REDIRECT_URI);
 switch (REDIRECT_URI) {
@@ -9,7 +10,12 @@ switch (REDIRECT_URI) {
             root.innerHTML = data
         })
         break;
-    default:
-        console.log("none");
-        break;
 }
+
+list.addEventListener('click', () => {
+    fetch("http://localhost:8000/lists", { method: "GET" }).then(res => {
+        return res.text()
+    }).then(data => {
+        root.innerHTML = data
+    })
+})
