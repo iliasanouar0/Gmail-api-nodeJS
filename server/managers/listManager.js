@@ -7,13 +7,7 @@ const getData = (request, response) => {
     let fileObjs = fs.readdirSync(path);
     fileObjs.forEach(file => {
         let filePath = `${path}/${file}`
-        const data = fs.readFile(filePath, (e, d) => {
-            if (e) {
-                throw e
-            }
-            return d
-        });
-
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         objects.push({ list: file, data: data })
     })
     response.status(200).send(objects)
