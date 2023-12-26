@@ -1,5 +1,6 @@
 const root = document.getElementById('root')
 const list = document.querySelector('.list')
+const table = require('./view/table')
 let REDIRECT_URI = location.href.split('/')[location.href.split('/').length - 1]
 console.log(REDIRECT_URI);
 switch (REDIRECT_URI) {
@@ -17,6 +18,8 @@ list.addEventListener('click', () => {
         return res.json()
     }).then(data => {
         console.log(data);
-        root.innerHTML = data
+        data.forEach(element => {
+            console.log(element);
+        });
     })
 })
