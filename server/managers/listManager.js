@@ -5,9 +5,9 @@ const getData = (request, response) => {
     let path = './data/'
     let objects = []
     let fileObjs = fs.readdirSync(path);
-    fileObjs.forEach(async (file) => {
+    fileObjs.forEach(file => {
         let filePath = `${path}/${file}`
-        const data = await fs.readFile(filePath, (e, d) => {
+        const data = fs.readFile(filePath, (e, d) => {
             if (e) {
                 throw e
             }
