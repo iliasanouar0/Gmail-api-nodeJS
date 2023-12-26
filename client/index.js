@@ -14,8 +14,9 @@ switch (REDIRECT_URI) {
 
 list.addEventListener('click', () => {
     fetch("http://localhost:8000/lists", { method: "GET" }).then(res => {
-        return res.text()
+        return res.json()
     }).then(data => {
+        console.log(data);
         root.innerHTML = data
     })
 })
