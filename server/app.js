@@ -25,3 +25,4 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/lists", listManager.getData);
+app.get("/lists/:list", listManager.getDataList);

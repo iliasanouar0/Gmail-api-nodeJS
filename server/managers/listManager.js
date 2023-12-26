@@ -13,6 +13,14 @@ const getData = (request, response) => {
     response.status(200).send(objects)
 }
 
+const getDataList = (request, response) => {
+    let list = request.params.list
+    let path = `./data/${list}`
+    const data = JSON.parse(fs.readFileSync(path, 'utf8'));
+    response.status(200).send(data)
+}
+
 module.exports = {
-    getData
+    getData,
+    getDataList
 }
