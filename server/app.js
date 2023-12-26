@@ -21,3 +21,14 @@ app.get("/", async (req, res) => {
     res.send(d.toString());
   })
 });
+
+app.get("/lists", async (req, res) => {
+  fs.readFile('./client/list.html', (e, d) => {
+    if (e) {
+      res.status(500).send(e)
+      return e
+    }
+    console.log(d);
+    res.send(d.toString());
+  })
+});
