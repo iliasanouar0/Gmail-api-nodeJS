@@ -7,7 +7,7 @@ const app = express();
 const routes = require("./routes");
 app.use('/api', routes);
 const listManager = require('./managers/listManager')
-// app.use(bodyParser.json())
+const processManager = require('./managers/processManager')
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*"); // disabled for security on local
   res.header("Access-Control-Allow-Headers", "Content-Type");
@@ -20,9 +20,7 @@ app.listen(process.env.PORT, () => {
 
 
 
-app.get("/", async (req, res) => {
-  res.send('<div>test</div>');
-});
+app.get("/", processManager.getData);
 
 app.get("/lists", listManager.getData);
 app.get("/lists/:list", listManager.getDataList);

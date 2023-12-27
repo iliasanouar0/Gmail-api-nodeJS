@@ -1,20 +1,18 @@
 [
     {
-        "id_seeds": 70500,
         "gmail": "hasithjayanath1994@gmail.com",
         "password": "761578412",
         "proxy": "none",
         "isp": "gmail",
         "verification": "pelinolovenak@outlook.com",
-        "id_list": 15
+        "REFRESH_TOKEN": null
     },
     {
-        "id_seeds": 70501,
         "gmail": "ssahaan761294158@gmail.com",
         "password": "761294158",
         "proxy": "none",
         "isp": "gmail",
         "verification": "pelila1985@outlook.com",
-        "id_list": 15
+        "REFRESH_TOKEN": null
     }
 ]
