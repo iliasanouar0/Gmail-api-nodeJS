@@ -303,7 +303,8 @@ list.addEventListener('click', () => {
                 <th scope="col">#</th>
                 <th scope="col">Gmail</th>
                 <th scope="col">Isp</th>
-                <th scope="col">verification</th>
+                <th scope="col">Proxy</th>
+                <th scope="col">Verification</th>
               </tr>
             </thead>
             <tbody id="seedData">
@@ -321,6 +322,7 @@ list.addEventListener('click', () => {
                 <th scope="row">${i}</th>
                 <td>${e.gmail}</td>
                 <td>${e.isp}</td>
+                <td>${e.proxy}</td>
                 <td>${e.verification}</td>
                 </tr>`
                 seedData.innerHTML = row

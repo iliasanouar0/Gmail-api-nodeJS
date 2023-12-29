@@ -51,9 +51,22 @@ const updateProcess = (name, data) => {
     });
 }
 
-const processing = (action, data) => {
-
-}
+// const processing = async (action, data) => {
+//     switch (action) {
+//         case 'send':
+//             await process.verify(seed, entity, mode).then(e => {
+//                 result = e
+//             })
+//             return result
+//         case 'send':
+//             await process.verify(seed, entity, mode).then(e => {
+//                 result = e
+//             })
+//             return result
+//         default:
+//             break;
+//     }
+// }
 
 module.exports = {
     getData,
