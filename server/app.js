@@ -22,13 +22,13 @@ app.listen(process.env.PORT, () => {
   console.log("listening on port " + process.env.PORT);
 });
 
-
-
+const sendToAll = (c, m) => {
+  c.forEach(client => {
+    client.send(m)
+  });
+}
+let clients = []
 wsi.on('connection', (wss, req) => {
-
-  let id = parseInt(url.parse(req.url).query.split('=')[1])
-
-  wss.id = id
 
   clients.push(wss)
   console.log(clients.length);
@@ -37,7 +37,6 @@ wsi.on('connection', (wss, req) => {
   let request = ""
   wss.on('close', () => {
     console.log('disconnected!');
-    clients.slice(clients.indexOf(wss), 1)
   })
 
   wss.on('message', async (message) => {
@@ -54,6 +53,7 @@ wsi.on('connection', (wss, req) => {
       processManager.updateProcess(name, dataProcess)
       console.log(dataProcess);
       console.log(data);
+      sendToAll(clients,'reload')
       // let Origins = await processManager.getAllProcessSeeds(data.list)
       // let seeds = [...Origins]
       // let actions = seeds[0].action
@@ -369,7 +369,6 @@ wsi.on('connection', (wss, req) => {
       //       await processStateManager.updateState(status);
       //       composeManager.finishedProcess({ id_process: data.id_process, status: `FINISHED` });
       //       console.log(`Process with id: ${data.id_process} finished at ${new Date().toLocaleString()} `);
-      //       sendToAll(clients, 'reload');
       //     }
       //   }
       // };

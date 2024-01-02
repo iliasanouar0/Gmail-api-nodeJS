@@ -252,23 +252,30 @@ if (REDIRECT_URI == '') {
 
     $(document).on('click', '.start', e => {
         let p = $(e.target).data('p')
-        console.log(p);
-        var settings = {
-            "url": `http://localhost:8000/p/${p}`,
-            "method": "POST",
-            "timeout": 0,
-            "headers": {
-                "Content-Type": "application/json"
-            },
-            "data": JSON.stringify({ process: p }),
-        };
 
-        $.ajax(settings).done(function (response) {
-            console.log(response);
-            if (response == 'reload') {
-                location.reload()
-            }
-        });
+
+        let socketState = websocket_s.readyState
+        if (socketState !== websocket_s.CLOSED) {
+            websocket_s.send(JSON.stringify({ request: "start", name: p }))
+        }
+        
+        // console.log(p);
+        // var settings = {
+        //     "url": `http://localhost:8000/p/${p}`,
+        //     "method": "POST",
+        //     "timeout": 0,
+        //     "headers": {
+        //         "Content-Type": "application/json"
+        //     },
+        //     "data": JSON.stringify({ process: p }),
+        // };
+
+        // $.ajax(settings).done(function (response) {
+        //     console.log(response);
+        //     if (response == 'reload') {
+        //         location.reload()
+        //     }
+        // });
     })
 }
 
