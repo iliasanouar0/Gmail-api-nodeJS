@@ -96,14 +96,17 @@ if (REDIRECT_URI == '') {
                 <td>${e.data.details}</td>`
                 console.log(e.data.status);
                 if (e.data.status == 'RUNNING') {
-                    row += `<td><button class="btn btn-secondary start" id="${e.list}" data-p="${e.list}" disabled>---</button></td></tr>`
+                    row += `<td><button class="btn btn-secondary start" id="${e.list}" data-p="${e.list}" disabled>---</button>`
                 } else {
-                    row += `<td><button class="btn btn-secondary start" id="${e.list}" data-p="${e.list}">start</button></td></tr>`
+                    row += `<td><button class="btn btn-secondary start" id="${e.list}" data-p="${e.list}">start</button>`
                 }
+
+                row += `<button class="btn btn-primary show" id="${e.list}" data-p="${e.list}">show</button></td></tr>`
             });
             $('#processData').html(row)
         }
     })
+
     $(document).on('click', '#add_process', e => {
         console.log('add process');
         let form = `<div class="mb-3">
@@ -121,7 +124,10 @@ if (REDIRECT_URI == '') {
     <label class="btn btn-outline-success" for="Authorize">Authorize</label>
 
     <input type="radio" class="btn-check" name="options" id="Send" autocomplete="off" value="send">
-    <label class="btn btn-outline-secondary" for="Send">Send</label>
+    <label class="btn btn-outline-danger" for="Send">Send</label>
+
+    <input type="radio" class="btn-check" name="options" id="Verify" autocomplete="off" value="Verify">
+    <label class="btn btn-outline-secondary" for="Verify">Verify</label>
     </div>
 
     <div class="row d-none send">
@@ -187,6 +193,7 @@ if (REDIRECT_URI == '') {
         $('.modal-body').html(form)
         $('#Modal').modal('show')
     })
+
     $(document).on('click', '.save', () => {
         console.log('save process');
         let to
@@ -245,6 +252,21 @@ if (REDIRECT_URI == '') {
                     ]
                 addProcess(authorize)
                 break;
+            case 'Verify':
+                let Verify =
+                    [
+                        {
+                            "name": `${name}`,
+                            "list": `${list}`,
+                            "count": `${count}`,
+                            "action": `${action}`,
+                            "status": `idle`,
+                            "details": `none`
+                        }
+                    ]
+                addProcess(Verify)
+                break;
+
             default:
                 break;
         }
@@ -258,7 +280,7 @@ if (REDIRECT_URI == '') {
         if (socketState !== websocket_s.CLOSED) {
             websocket_s.send(JSON.stringify({ request: "start", name: p }))
         }
-        
+
         // console.log(p);
         // var settings = {
         //     "url": `http://localhost:8000/p/${p}`,

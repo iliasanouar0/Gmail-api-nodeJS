@@ -46,11 +46,12 @@ const getAllProcessSeeds = (data) => {
 
 const processing = async (action, data) => {
     switch (action) {
-        // case 'send':
-        //     await process.verify(seed, entity, mode).then(e => {
-        //         result = e
-        //     })
-        //     return result
+        case 'Verify':
+            console.log(data);
+            // await process.verify(seed, entity, mode).then(e => {
+            //     result = e
+            // })
+            return result
         case "authorize":
             await process.getRefreshToken(data).then(e => {
                 result = e
@@ -66,6 +67,6 @@ module.exports = {
     getData,
     addProcess,
     updateProcess,
-    getAllProcessSeeds
-    // startProcess
+    getAllProcessSeeds,
+    processing
 }
