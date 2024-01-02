@@ -137,17 +137,10 @@ wsi.on('connection', (wss, req) => {
       const processV = async (toProcess, start, option) => {
         console.log('Entered Process V :' + toProcess[0].gmail + ` ,at ${new Date().toLocaleString()}`);
         console.log(`Id process : ${data.name}, data : ${toProcess[0].gmail}`);
-        await time(3000)
-        let state = await composeManager.getProcessState(data.name)
         console.log(state + ' ' + toProcess[0].gmail);
         console.log(toProcess.length + ' ' + toProcess[0].gmail);
-        await time(3000)
         while (toProcess.length !== 0 && state !== "STOPPED" && state !== "PAUSED") {
           console.log('Entered while loop :' + toProcess[0].gmail + ` ,at ${new Date().toLocaleString()}`);
-          state = await composeManager.getProcessState(data.name);
-          if (state === "STOPPED") {
-            break;
-          }
           for (let i = 0; i < toProcess.length; i++) {
             console.log('Entered for loop :' + toProcess[0].gmail + ` ,at ${new Date().toLocaleString()}`);
             let seed = toProcess[0];
@@ -160,12 +153,6 @@ wsi.on('connection', (wss, req) => {
             console.log('processing :' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
             console.log('running :' + running);
             await updateProcessState();
-            state = await composeManager.getProcessState(data.name);
-
-            if (state === "STOPPED" || state === "PAUSED") {
-              break;
-            }
-
             await processSeedActions(seed, option);
           }
 
@@ -197,12 +184,12 @@ wsi.on('connection', (wss, req) => {
           }
 
           r = removeTrailingComma(r);
-
-          if (r.indexOf('invalid') === -1) {
-            await handleSuccess(seed);
-          } else {
-            await handleFailure(seed);
-          }
+          
+          // if (r.indexOf('invalid') === -1) {
+          //   await handleSuccess(seed);
+          // } else {
+          //   await handleFailure(seed);
+          // }
         }
 
         function extractActions(seed) {
