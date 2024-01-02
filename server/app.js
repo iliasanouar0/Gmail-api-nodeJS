@@ -161,19 +161,18 @@ wsi.on('connection', (wss, req) => {
 
         async function processSeedActions(seed, option) {
           console.log('Entered processSeedActions : ' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
-          let { action, subject, pages, mode } = extractActions(actions);
 
-          console.log(`Actions: ${action} , ${seed.gmail}`);
+          console.log(`Actions: ${actions} , ${seed.gmail}`);
           console.log('defined action : ' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
 
           let r = '';
 
-          for (let i = 0; i < action.length; i++) {
-            console.log(`${action[i]} action start`);
-            console.log('starting :' + seed.gmail + ` ,action : ${action[i]} ,at ${new Date().toLocaleString()}`);
-            r += await processManager.processing(action[i], seed);
+          for (let i = 0; i < actions.length; i++) {
+            console.log(`${actions[i]} action start`);
+            console.log('starting :' + seed.gmail + ` ,action : ${actions[i]} ,at ${new Date().toLocaleString()}`);
+            r += await processManager.processing(actions[i], seed);
 
-            if (i < action.length - 1) {
+            if (i < actions.length - 1) {
               r += ', ';
             }
 
