@@ -19,6 +19,7 @@
     "pm2": "^5.3.0",
     "puppeteer": "^21.6.1",
     "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2"
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "ws": "^8.16.0"
   }
 }

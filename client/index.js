@@ -1,3 +1,26 @@
+const wssUri = `ws://localhost:7071/wss`;
+const websocket_s = new WebSocket(wssUri);
+
+websocket_s.onmessage = (event) => {
+    let data = event.data
+    console.log(data);
+    switch (data) {
+        case 'reload':
+            location.reload()
+            break
+        default:
+            console.log(data);
+            break;
+    }
+}
+
+
+
+
+
+
+
+
 const root = document.getElementById('root')
 const list = document.querySelector('.list')
 let REDIRECT_URI = location.href.split('/')[location.href.split('/').length - 1]
@@ -70,9 +93,13 @@ if (REDIRECT_URI == '') {
                 <td>${e.data.count}</td>
                 <td>${e.data.action}</td>
                 <td>${e.data.status}</td>
-                <td>${e.data.details}</td>
-                <td><button class="btn btn-secondary start" data-p="${e.list}">start</button></td>
-                </tr>`
+                <td>${e.data.details}</td>`
+                console.log(e.data.status);
+                if (e.data.status == 'RUNNING') {
+                    row += `<td><button class="btn btn-secondary start" id="${e.list}" data-p="${e.list}" disabled>---</button></td></tr>`
+                } else {
+                    row += `<td><button class="btn btn-secondary start" id="${e.list}" data-p="${e.list}">start</button></td></tr>`
+                }
             });
             $('#processData').html(row)
         }

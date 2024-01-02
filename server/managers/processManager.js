@@ -28,19 +28,6 @@ const getData = (request, response) => {
     response.status(200).send(objects)
 }
 
-const startProcess = (request, response) => {
-    let path = './process'
-    let name = (request.params.name)
-    // response.send(name)
-    let filePath = `${path}/${name}`
-    const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    data.status = 'RUNNING'
-    updateProcess(name, data)
-    processing(data.action, data)
-    response.status(200).send({ name: name, data: data })
-}
-
-
 const updateProcess = (name, data) => {
     let path = `./process/${name}`
     fs.writeFile(path, `${[JSON.stringify(data)]}`, function (err, data) {
@@ -48,6 +35,13 @@ const updateProcess = (name, data) => {
             throw err
         }
     });
+}
+
+const getAllProcessSeeds = (data) => {
+    let list = data
+    let path = `./data/${list}`
+    const result = JSON.parse(fs.readFileSync(path, 'utf8'));
+    return result
 }
 
 const processing = async (action, data) => {
@@ -71,5 +65,7 @@ const processing = async (action, data) => {
 module.exports = {
     getData,
     addProcess,
-    startProcess
+    updateProcess,
+    getAllProcessSeeds
+    // startProcess
 }
