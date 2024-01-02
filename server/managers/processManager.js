@@ -51,7 +51,7 @@ const processing = async (action, data) => {
             // await process.verify(seed, entity, mode).then(e => {
             //     result = e
             // })
-            return result
+            return data
         case "authorize":
             await process.getRefreshToken(data).then(e => {
                 result = e
