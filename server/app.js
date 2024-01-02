@@ -180,11 +180,11 @@ wsi.on('connection', (wss, req) => {
 
           r = removeTrailingComma(r);
 
-          // if (r.indexOf('invalid') === -1) {
-          //   await handleSuccess(seed);
-          // } else {
-          //   await handleFailure(seed);
-          // }
+          if (r.indexOf('invalid') === -1) {
+            await handleSuccess(seed);
+          } else {
+            await handleFailure(seed);
+          }
         }
 
         function extractActions(seed) {
@@ -236,117 +236,117 @@ wsi.on('connection', (wss, req) => {
 
         function removeTrailingComma(str) { const array = str.split(', '); /*array.pop();*/ return array.join(', '); }
 
-        // async function handleSuccess(seed) {
-        //   console.log('success :' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
-        //   success++;
+        async function handleSuccess(seed) {
+          console.log('success :' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
+          success++;
 
-        //   const end_in = new Date();
-        //   const result = {
-        //     id_seeds: seed.id_seeds,
-        //     end_in,
-        //     name: data.name,
-        //   };
+          const end_in = new Date();
+          const result = {
+            id_seeds: seed.id_seeds,
+            end_in,
+            name: data.name,
+          };
 
-        //   await Promise.all([
-        //     resultManager.updateState([{ id_seeds: seed.id_seeds, name: data.name }], "finished"),
-        //     resultManager.endNow(result),
-        //   ]);
-        //   running--
-        //   toProcess.shift();
-        //   state = await composeManager.getProcessState(data.name);
+          await Promise.all([
+            resultManager.updateState([{ id_seeds: seed.id_seeds, name: data.name }], "finished"),
+            resultManager.endNow(result),
+          ]);
+          running--
+          toProcess.shift();
+          state = await composeManager.getProcessState(data.name);
 
-        //   if (state === "STOPPED" || state === "PAUSED") {
-        //     return;
-        //   }
-        //   console.log(seeds.length);
-        //   console.log('active : ' + active);
-        //   console.log('toProcess.length : ' + toProcess.length);
-        //   console.log('seeds.length : ' + seeds.length);
-        //   if (toProcess.length < active && state !== "STOPPED" && state !== "PAUSED" && seeds.length !== 0) {
-        //     console.log('The indexed seed: ' + seeds[0].id_seeds);
-        //     toProcess.push(seeds[0]);
-        //     if (!option.onlyStarted) {
-        //       await startSeedProcessing(seeds[0]);
-        //       running++
-        //     }
-        //     seeds.splice(seeds.indexOf(seeds[0]), 1);
-        //     count++;
-        //     await updateProcessState();
-        //   }
-        // }
+          if (state === "STOPPED" || state === "PAUSED") {
+            return;
+          }
+          console.log(seeds.length);
+          console.log('active : ' + active);
+          console.log('toProcess.length : ' + toProcess.length);
+          console.log('seeds.length : ' + seeds.length);
+          if (toProcess.length < active && state !== "STOPPED" && state !== "PAUSED" && seeds.length !== 0) {
+            console.log('The indexed seed: ' + seeds[0].id_seeds);
+            toProcess.push(seeds[0]);
+            if (!option.onlyStarted) {
+              await startSeedProcessing(seeds[0]);
+              running++
+            }
+            seeds.splice(seeds.indexOf(seeds[0]), 1);
+            count++;
+            await updateProcessState();
+          }
+        }
 
-        // async function handleFailure(seed) {
-        //   console.log('failed :' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
-        //   failed++;
+        async function handleFailure(seed) {
+          console.log('failed :' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
+          failed++;
 
-        //   const end_in = new Date();
-        //   const result = {
-        //     id_seeds: seed.id_seeds,
-        //     end_in,
-        //     name: data.name,
-        //   };
+          const end_in = new Date();
+          const result = {
+            id_seeds: seed.id_seeds,
+            end_in,
+            name: data.name,
+          };
 
-        //   await Promise.all([
-        //     resultManager.updateState([{ id_seeds: seed.id_seeds, name: data.name }], "failed"),
-        //     resultManager.endNow(result),
-        //   ]);
-        //   running--
+          await Promise.all([
+            resultManager.updateState([{ id_seeds: seed.id_seeds, name: data.name }], "failed"),
+            resultManager.endNow(result),
+          ]);
+          running--
 
-        //   toProcess.shift();
-        //   state = await composeManager.getProcessState(data.name);
+          toProcess.shift();
+          state = await composeManager.getProcessState(data.name);
 
-        //   if (state === "STOPPED" || state === "PAUSED") {
-        //     return;
-        //   }
-        //   console.log('active : ' + active);
-        //   console.log('toProcess.length : ' + toProcess.length);
-        //   console.log('seeds.length : ' + seeds.length);
-        //   if (toProcess.length < active && count < length && state !== "STOPPED" && state !== "PAUSED" && seeds.length !== 0) {
-        //     console.log('The indexed seed: ' + seeds[0].id_seeds);
-        //     toProcess.push(seeds[0]);
-        //     if (!option.onlyStarted) {
-        //       await startSeedProcessing(seeds[0]);
-        //       running++
-        //     }
-        //     seeds.splice(seeds.indexOf(seeds[0]), 1);
-        //     count++;
-        //     await updateProcessState();
-        //   }
-        // }
+          if (state === "STOPPED" || state === "PAUSED") {
+            return;
+          }
+          console.log('active : ' + active);
+          console.log('toProcess.length : ' + toProcess.length);
+          console.log('seeds.length : ' + seeds.length);
+          if (toProcess.length < active && count < length && state !== "STOPPED" && state !== "PAUSED" && seeds.length !== 0) {
+            console.log('The indexed seed: ' + seeds[0].id_seeds);
+            toProcess.push(seeds[0]);
+            if (!option.onlyStarted) {
+              await startSeedProcessing(seeds[0]);
+              running++
+            }
+            seeds.splice(seeds.indexOf(seeds[0]), 1);
+            count++;
+            await updateProcessState();
+          }
+        }
 
-        // async function updateProcessState() {
-        //   let w = waiting - success - failed
-        //   if (w <= 0) {
-        //     let status = { waiting: 0, active: running, finished: success, failed, name: data.name };
-        //     processStateManager.updateState(status);
-        //   } else {
-        //     let status = { waiting: w, active: running, finished: success, failed, name: data.name };
-        //     processStateManager.updateState(status);
-        //   }
-        // }
+        async function updateProcessState() {
+          let w = waiting - success - failed
+          if (w <= 0) {
+            let status = { waiting: 0, active: running, finished: success, failed, name: data.name };
+            processStateManager.updateState(status);
+          } else {
+            let status = { waiting: w, active: running, finished: success, failed, name: data.name };
+            processStateManager.updateState(status);
+          }
+        }
 
-        // async function handleProcessCompletion() {
-        //   let w = waiting - success - failed
-        //   if (w <= 0) {
-        //     let status = { waiting: 0, active: running, finished: success, failed, name: data.name };
-        //     processStateManager.updateState(status);
-        //   } else {
-        //     let status = { waiting: w, active: running, finished: success, failed, name: data.name };
-        //     processStateManager.updateState(status);
-        //   }
+        async function handleProcessCompletion() {
+          let w = waiting - success - failed
+          if (w <= 0) {
+            let status = { waiting: 0, active: running, finished: success, failed, name: data.name };
+            processStateManager.updateState(status);
+          } else {
+            let status = { waiting: w, active: running, finished: success, failed, name: data.name };
+            processStateManager.updateState(status);
+          }
 
-        //   state = await composeManager.getProcessState(data.name);
+          state = await composeManager.getProcessState(data.name);
 
-        //   if (state === "STOPPED" || state === "PAUSED") {
-        //     return;
-        //   }
-        //   if (toProcess.length === 0 && seeds.length === 0 && running === 0) {
-        //     let status = { waiting: 0, active: 0, finished: success, failed: failed, name: data.name };
-        //     await processStateManager.updateState(status);
-        //     composeManager.finishedProcess({ name: data.name, status: `FINISHED` });
-        //     console.log(`Process with id: ${data.name} finished at ${new Date().toLocaleString()} `);
-        //   }
-        // }
+          if (state === "STOPPED" || state === "PAUSED") {
+            return;
+          }
+          if (toProcess.length === 0 && seeds.length === 0 && running === 0) {
+            let status = { waiting: 0, active: 0, finished: success, failed: failed, name: data.name };
+            await processStateManager.updateState(status);
+            composeManager.finishedProcess({ name: data.name, status: `FINISHED` });
+            console.log(`Process with id: ${data.name} finished at ${new Date().toLocaleString()} `);
+          }
+        }
       };
 
       async function repeat(array, number, start, check, action) {
