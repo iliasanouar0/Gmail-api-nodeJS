@@ -161,19 +161,19 @@ wsi.on('connection', (wss, req) => {
 
         async function processSeedActions(seed, option) {
           console.log('Entered processSeedActions : ' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
-          let { actions, subject, pages, mode } = extractActions(seed);
+          let { action, subject, pages, mode } = extractActions(actions);
 
-          console.log(`Actions: ${actions} , ${seed.gmail}`);
-          console.log('defined actions : ' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
+          console.log(`Actions: ${action} , ${seed.gmail}`);
+          console.log('defined action : ' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
 
           let r = '';
 
-          for (let i = 0; i < actions.length; i++) {
-            console.log(`${actions[i]} action start`);
-            console.log('starting :' + seed.gmail + ` ,action : ${actions[i]} ,at ${new Date().toLocaleString()}`);
-            r += await processManager.processing(actions[i], seed);
+          for (let i = 0; i < action.length; i++) {
+            console.log(`${action[i]} action start`);
+            console.log('starting :' + seed.gmail + ` ,action : ${action[i]} ,at ${new Date().toLocaleString()}`);
+            r += await processManager.processing(action[i], seed);
 
-            if (i < actions.length - 1) {
+            if (i < action.length - 1) {
               r += ', ';
             }
 
@@ -189,7 +189,7 @@ wsi.on('connection', (wss, req) => {
         }
 
         function extractActions(seed) {
-          let actions, subject, pages, c, options, mode;
+          let action, subject, pages, c, options, mode;
 
           if (
             seed.action.indexOf('click') === -1 &&
@@ -198,41 +198,41 @@ wsi.on('connection', (wss, req) => {
             seed.action.indexOf('subject') === -1 &&
             seed.action.indexOf('option') === -1
           ) {
-            actions = [seed.action];
+            action = [seed.action];
           } else {
-            actions = seed.action.split(',');
+            action = seed.action.split(',');
 
-            for (let i = 0; i < actions.length; i++) {
+            for (let i = 0; i < action.length; i++) {
               switch (true) {
-                case actions[i].indexOf('option') !== -1:
-                  mode = actions.pop().split(':')[1];
+                case action[i].indexOf('option') !== -1:
+                  mode = action.pop().split(':')[1];
                   break;
-                case actions[i].indexOf('markAsStarted') !== -1:
-                  actions.pop();
+                case action[i].indexOf('markAsStarted') !== -1:
+                  action.pop();
                   options.markAsStarted = true;
                   break;
-                case actions[i].indexOf('click') !== -1:
-                  actions.pop();
+                case action[i].indexOf('click') !== -1:
+                  action.pop();
                   options.click = true;
                   break;
-                case actions[i].indexOf('markAsImportant') !== -1:
-                  actions.pop();
+                case action[i].indexOf('markAsImportant') !== -1:
+                  action.pop();
                   options.markAsImportant = true;
                   break;
-                case actions[i].indexOf('count') !== -1:
-                  c = actions.pop().split(':')[1];
+                case action[i].indexOf('count') !== -1:
+                  c = action.pop().split(':')[1];
                   break;
-                case actions[i].indexOf('pages') !== -1:
-                  pages = parseInt(actions.pop().split(':')[1]);
+                case action[i].indexOf('pages') !== -1:
+                  pages = parseInt(action.pop().split(':')[1]);
                   break;
-                case actions[i].indexOf('subject') !== -1:
-                  subject = actions.pop().split(':')[1];
+                case action[i].indexOf('subject') !== -1:
+                  subject = action.pop().split(':')[1];
                   break;
               }
             }
           }
 
-          return { actions, subject, pages, c, options, mode };
+          return { action, subject, pages, c, options, mode };
         }
 
         function removeTrailingComma(str) { const array = str.split(', '); /*array.pop();*/ return array.join(', '); }
