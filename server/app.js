@@ -137,9 +137,8 @@ wsi.on('connection', (wss, req) => {
       const processV = async (toProcess, start, option) => {
         console.log('Entered Process V :' + toProcess[0].gmail + ` ,at ${new Date().toLocaleString()}`);
         console.log(`Id process : ${data.name}, data : ${toProcess[0].gmail}`);
-        console.log(state + ' ' + toProcess[0].gmail);
         console.log(toProcess.length + ' ' + toProcess[0].gmail);
-        while (toProcess.length !== 0 && state !== "STOPPED" && state !== "PAUSED") {
+        while (toProcess.length !== 0) {
           console.log('Entered while loop :' + toProcess[0].gmail + ` ,at ${new Date().toLocaleString()}`);
           for (let i = 0; i < toProcess.length; i++) {
             console.log('Entered for loop :' + toProcess[0].gmail + ` ,at ${new Date().toLocaleString()}`);
@@ -184,7 +183,7 @@ wsi.on('connection', (wss, req) => {
           }
 
           r = removeTrailingComma(r);
-          
+
           // if (r.indexOf('invalid') === -1) {
           //   await handleSuccess(seed);
           // } else {
