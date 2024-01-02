@@ -31,18 +31,17 @@ const getData = (request, response) => {
 const startProcess = (request, response) => {
     let path = './process'
     let name = (request.params.name)
-    console.log(name);
     // response.send(name)
     let filePath = `${path}/${name}`
     const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     data.status = 'RUNNING'
     updateProcess(name, data)
+    processing(data.action, data)
     response.status(200).send({ name: name, data: data })
 }
 
 
 const updateProcess = (name, data) => {
-    console.log(data);
     let path = `./process/${name}`
     fs.writeFile(path, `${[JSON.stringify(data)]}`, function (err, data) {
         if (err) {
@@ -51,22 +50,23 @@ const updateProcess = (name, data) => {
     });
 }
 
-// const processing = async (action, data) => {
-//     switch (action) {
-//         case 'send':
-//             await process.verify(seed, entity, mode).then(e => {
-//                 result = e
-//             })
-//             return result
-//         case 'send':
-//             await process.verify(seed, entity, mode).then(e => {
-//                 result = e
-//             })
-//             return result
-//         default:
-//             break;
-//     }
-// }
+const processing = async (action, data) => {
+    switch (action) {
+        // case 'send':
+        //     await process.verify(seed, entity, mode).then(e => {
+        //         result = e
+        //     })
+        //     return result
+        case "authorize":
+            await process.getRefreshToken(data).then(e => {
+                result = e
+            })
+            return result
+        default:
+            console.log('unknown action');
+            break;
+    }
+}
 
 module.exports = {
     getData,
