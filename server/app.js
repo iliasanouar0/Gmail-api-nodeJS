@@ -52,9 +52,11 @@ wsi.on('connection', (wss, req) => {
       dataProcess.status = 'RUNNING'
       processManager.updateProcess(name, dataProcess)
       console.log(dataProcess);
+      console.log('test');
       console.log(data);
       sendToAll(clients,'reload')
-      // let Origins = await processManager.getAllProcessSeeds(data.list)
+      let Origins = await processManager.getAllProcessSeeds(dataProcess.list)
+      console.log(Origins);
       // let seeds = [...Origins]
       // let actions = seeds[0].action
       //   , subject
