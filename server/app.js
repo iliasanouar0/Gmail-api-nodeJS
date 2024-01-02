@@ -224,6 +224,8 @@ wsi.on('connection', (wss, req) => {
         async function handleProcessCompletion() {
           if (toProcess.length === 0 && seeds.length === 0 && running === 0) {
             let status = { waiting: 0, active: 0, finished: success, failed: failed, name: data.name };
+            dataProcess.status = 'FINISHED'
+            processManager.updateProcess(name, dataProcess)
             console.log(`Process with id: ${data.name} finished at ${new Date().toLocaleString()} `);
           }
         }
