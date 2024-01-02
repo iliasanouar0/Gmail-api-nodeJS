@@ -151,11 +151,8 @@ wsi.on('connection', (wss, req) => {
             }
             console.log('processing :' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
             console.log('running :' + running);
-            await updateProcessState();
             await processSeedActions(seed, option);
           }
-
-          await updateProcessState();
         }
 
         await handleProcessCompletion();
