@@ -51,12 +51,12 @@ if (REDIRECT_URI == '') {
         root.innerHTML = `
         <div class="container m-5">
         <div class="row">
-        <div class="row mb-3">
-        <div class="col">
+         <div class="row mb-3">
+          <div class="col">
         <button class="btn btn-success" id="add_process">Add process</button>
         </div>
         </div>
-        <div class="col">
+        <div class="col mb-5">
         <table class="table">
         <thead>
           <tr>
@@ -74,6 +74,12 @@ if (REDIRECT_URI == '') {
         </tbody>
       </table>
         </div>
+        </div>
+        </div>
+
+        <div class="container m-5">
+        <div class="row" id="result">
+         
         </div>
         </div>
        `
@@ -97,11 +103,12 @@ if (REDIRECT_URI == '') {
                 console.log(e.data.status);
                 if (e.data.status == 'RUNNING') {
                     row += `<td><button class="btn btn-secondary start" id="${e.list}" data-p="${e.list}" disabled>---</button>`
+                } else if (e.data.action.includes('send')) {
+                    row += `<td><button class="btn btn-secondary send" id="${e.list}" data-p="${e.list}">Send</button>`
                 } else {
-                    row += `<td><button class="btn btn-secondary start" id="${e.list}" data-p="${e.list}">start</button>`
+                    row += `<td><button class="btn btn-secondary start" id="${e.list}" data-p="${e.list}">Start</button>`
                 }
-
-                row += `<button class="btn btn-primary show" id="${e.list}" data-p="${e.list}">show</button></td></tr>`
+                row += `<button class="btn btn-primary show" id="${e.list}" data-p="${e.list}">Show</button></td></tr>`
             });
             $('#processData').html(row)
         }
@@ -232,6 +239,7 @@ if (REDIRECT_URI == '') {
                             "list": `${list}`,
                             "count": `${count}`,
                             "action": `${action}`,
+                            "text": `${text}`,
                             "status": `idle`,
                             "details": `none`
                         }
@@ -298,6 +306,26 @@ if (REDIRECT_URI == '') {
         //         location.reload()
         //     }
         // });
+    })
+
+    $(document).on('click', '.send', e => {
+        let p = $(e.target).data('p')
+        $(e.target).html('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>')
+        console.log(p);
+        var settings = {
+            "url": `http://localhost:8000/api/mail/send/${p}`,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Access-Control-Allow-Origin": "*"
+            },
+        };
+
+        $.ajax(settings).done(function (response) {
+            $(e.target).html('Send')
+            console.log(response);
+            $("#result").html(response)
+        });
     })
 }
 

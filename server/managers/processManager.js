@@ -16,6 +16,16 @@ const addProcess = (request, response) => {
     });
 }
 
+const saveList = (data, list) => {
+    console.log(data);
+    let path = `./data/${list}`
+    fs.writeFile(path, `${JSON.stringify(data)}`, function (err, data) {
+        if (err) {
+            throw err
+        }
+    });
+}
+
 const getData = (request, response) => {
     let path = './process/'
     let objects = []
@@ -44,14 +54,20 @@ const getAllProcessSeeds = (data) => {
     return result
 }
 
+const getProcess = (name) => {
+    let path = `./process/${name}`
+    const result = JSON.parse(fs.readFileSync(path, 'utf8'));
+    return result
+}
+
 const processing = async (action, data) => {
     switch (action) {
         case 'Verify':
             console.log(data);
-            // await process.verify(seed, entity, mode).then(e => {
-            //     result = e
-            // })
-            return data
+            await process.verify(data).then(e => {
+                result = e
+            })
+            return result
         case "authorize":
             await process.getRefreshToken(data).then(e => {
                 result = e
@@ -68,5 +84,7 @@ module.exports = {
     addProcess,
     updateProcess,
     getAllProcessSeeds,
-    processing
+    processing,
+    saveList,
+    getProcess
 }

@@ -3,15 +3,24 @@ const fs = require('fs')
 const bodyParser = require('body-parser');
 const WebSocket = require('ws');
 const wsi = new WebSocket.Server({ port: 7071 })
+const cors = require("cors");
+
 
 require("dotenv").config();
 
 const app = express();
 const routes = require("./routes");
 app.use('/api', routes);
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  }),
+);
 const listManager = require('./managers/listManager')
 const processManager = require('./managers/processManager')
+
+app.use(cors());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*"); // disabled for security on local
   res.header("Access-Control-Allow-Headers", "Content-Type");
@@ -58,6 +67,7 @@ wsi.on('connection', (wss, req) => {
       let Origins = await processManager.getAllProcessSeeds(dataProcess.list)
       console.log(Origins);
       let seeds = [...Origins]
+      let results = []
       let actions = dataProcess.action
         , subject
         , to
@@ -175,11 +185,9 @@ wsi.on('connection', (wss, req) => {
             }
 
           }
-
-          r = removeTrailingComma(r);
-
-          if (r.indexOf('invalid') === -1) {
-            await handleSuccess(seed);
+          r = JSON.parse(r)
+          if (r.REFRESH_TOKEN != 'invalid') {
+            await handleSuccess(seed, r);
           } else {
             await handleFailure(seed);
           }
@@ -187,7 +195,10 @@ wsi.on('connection', (wss, req) => {
 
         function removeTrailingComma(str) { const array = str.split(', '); /*array.pop();*/ return array.join(', '); }
 
-        async function handleSuccess(seed) {
+        async function handleSuccess(seed, r) {
+          console.log('handling as success');
+          console.log(r);
+          results.push(r)
           console.log('success :' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
           success++;
           toProcess.shift();
@@ -206,7 +217,7 @@ wsi.on('connection', (wss, req) => {
         async function handleFailure(seed) {
           console.log('failed :' + seed.gmail + ` ,at ${new Date().toLocaleString()}`);
           failed++;
-
+          results.push(r)
           running--
 
           toProcess.shift();
@@ -222,10 +233,11 @@ wsi.on('connection', (wss, req) => {
         }
 
         async function handleProcessCompletion() {
-          if (toProcess.length === 0 && seeds.length === 0 && running === 0) {
+          if (toProcess.length === 0 && seeds.length === 0) {
             let status = { waiting: 0, active: 0, finished: success, failed: failed, name: data.name };
             dataProcess.status = 'FINISHED'
             processManager.updateProcess(name, dataProcess)
+            processManager.saveList(results, dataProcess.list)
             console.log(`Process with id: ${data.name} finished at ${new Date().toLocaleString()} `);
           }
         }

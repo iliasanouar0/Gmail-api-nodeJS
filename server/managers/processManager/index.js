@@ -1,4 +1,6 @@
 const fs = require('fs')
+const setTimeout = require('timers/promises');
+let time = setTimeout.setTimeout
 const puppeteer = require('puppeteer-extra')
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 puppeteer.use(StealthPlugin())
@@ -6,7 +8,7 @@ require("dotenv").config();
 
 console.log(process.env.REDIRECT_URI);
 
-const cookies = './cookies'
+const cookies = './managers/processManager/cookies'
 
 const login = async (data, mode) => {
     let feedback = ''
@@ -19,10 +21,8 @@ const login = async (data, mode) => {
     }
     console.log(`Opening seed : ${data.gmail}, At ${new Date().toLocaleString()}`);
     console.log(` `);
-    const browser = await puppeteer.launch({ headless: 'new', args: arg })
-    const browserPID = browser.process().pid
+    const browser = await puppeteer.launch({ headless: false, args: arg })
     const page = await browser.newPage()
-    pidProcess.push({ id_process: data.id_process, pid: browserPID })
     await page.setViewport({ width: 1440, height: 720 });
     let file = `${cookies}/${data.gmail.split('@')[0]}-@-init-Gmail.json`
     const navigationPromise = page.waitForNavigation()
@@ -38,11 +38,11 @@ const login = async (data, mode) => {
     await time(3000)
     if (await page.url() == "https://mail.google.com/mail/u/0/#inbox") {
         await time(3000)
-        await page.screenshot({
-            path: `${path}/${data.gmail.split('@')[0]}-@-AUTO_LOGIN-${data.id_process}.png`
-        });
-        feedback += `${data.gmail.split('@')[0]}-@-AUTO_LOGIN-${data.id_process}.png`
-        await resultsManager.saveFeedback({ feedback: feedback, id_seeds: data.id_seeds, id_process: data.id_process })
+        // await page.screenshot({
+        //     path: `${path}/${data.gmail.split('@')[0]}-@-AUTO_LOGIN-${data.id_process}.png`
+        // });
+        // feedback += `${data.gmail.split('@')[0]}-@-AUTO_LOGIN-${data.id_process}.png`
+        // await resultsManager.saveFeedback({ feedback: feedback, id_seeds: data.id_seeds, id_process: data.id_process })
         const cookiesObject = await page.cookies()
         let NewFileJson = JSON.stringify(cookiesObject)
         fs.writeFile(file, NewFileJson, { spaces: 2 }, (err) => {
@@ -51,11 +51,11 @@ const login = async (data, mode) => {
             }
         })
     } else {
-        await page.screenshot({
-            path: `${path}/${data.gmail.split('@')[0]}-@-open-${data.id_process}.png`
-        });
-        feedback += `${data.gmail.split('@')[0]}-@-open-${data.id_process}.png`
-        await resultsManager.saveFeedback({ feedback: feedback, id_seeds: data.id_seeds, id_process: data.id_process })
+        // await page.screenshot({
+        //     path: `${path}/${data.gmail.split('@')[0]}-@-open-${data.id_process}.png`
+        // });
+        // feedback += `${data.gmail.split('@')[0]}-@-open-${data.id_process}.png`
+        // await resultsManager.saveFeedback({ feedback: feedback, id_seeds: data.id_seeds, id_process: data.id_process })
         await navigationPromise
         await page.waitForSelector('input[type="email"]')
         await page.click('input[type="email"]')
@@ -85,7 +85,7 @@ const login = async (data, mode) => {
 }
 
 
-const verify = async (data, entity, mode) => {
+const verify = async (data) => {
     let details = ''
     let arg
     let proxyServer
@@ -131,7 +131,7 @@ const verify = async (data, entity, mode) => {
         ]
     }
     console.log("Lunch puppeteer: " + `--proxy-server=${data.proxy}`);
-    const browser = await puppeteer.launch({ headless: 'new', ignoreHTTPSErrors: true, ignoreDefaultArgs: ['--enable-automation', '--disable-extensions'], args: arg })
+    const browser = await puppeteer.launch({ headless: false, ignoreHTTPSErrors: true, ignoreDefaultArgs: ['--enable-automation', '--disable-extensions'], args: arg })
     let c = await browser.createIncognitoBrowserContext({ proxyServer: proxyServer })
     let page = await c.newPage();
     await (await browser.pages())[0].close()
@@ -541,7 +541,106 @@ const verify = async (data, entity, mode) => {
 
 
 const getRefreshToken = async (data) => {
+    let feedback = ''
     console.log(data);
+    let obj = await login(data)
+    console.log(obj);
+    const page = obj.page
+    const browser = obj.browser
+    feedback += obj.feedback
+    await time(10000)
+
+    try {
+        const navigationPromise = page.waitForNavigation()
+        await page.goto(process.env.REDIRECT_URI)
+        await navigationPromise
+        await time(3000)
+        page.waitForSelector('#oauthConfigButton')
+        await time(3000)
+        page.click('#oauthConfigButton')
+        await time(3000)
+        page.waitForSelector('#useDefaultOauthCred')
+        await time(3000)
+        page.click('#useDefaultOauthCred')
+        await time(3000)
+        page.waitForSelector('#oauthClientId')
+        await time(3000)
+        await page.type('#oauthClientId', process.env.CLIENT_ID, { delay: 100 })
+        await time(3000)
+        page.waitForSelector('#oauthClientSecret')
+        await time(3000)
+        await page.type('#oauthClientSecret', process.env.CLIENT_SECRET, { delay: 100 })
+        await time(3000)
+        page.waitForSelector('#scopes')
+        await time(3000)
+        await page.type('#scopes', process.env.SCOPE, { delay: 100 })
+        await time(3000)
+        page.waitForSelector('#authorizeApisButton')
+        await time(3000)
+        page.click('#authorizeApisButton')
+        await navigationPromise
+        await time(3000)
+        await page.waitForSelector('input[type="email"]')
+        await page.click('input[type="email"]')
+        await navigationPromise
+        await page.type('input[type="email"]', data.gmail, { delay: 100 })
+        await page.waitForSelector('#identifierNext')
+        await page.click('#identifierNext')
+        await time(3000)
+        await page.waitForSelector('input[type="password"]')
+        await time(3000)
+        page.type('input[type="password"]', data.password, { delay: 200 })
+        await time(3000)
+        page.waitForSelector('#passwordNext')
+        await time(3000)
+        page.click('#passwordNext')
+        await navigationPromise
+
+        await time(3000)
+        page.waitForSelector('[jsname="BO4nrb"]')
+        await time(3000)
+        page.click('[jsname="BO4nrb"]')
+
+        await time(3000)
+        page.waitForSelector('[jsname="ehL7e"]')
+        await time(3000)
+        page.click('[jsname="ehL7e"]')
+        await time(3000)
+
+        let b = await page.$$('.VfPpkd-RLmnJb')
+        await time(3000)
+        await b[1].click()
+        await navigationPromise
+
+        await time(3000)
+        page.waitForSelector('#exchangeCode')
+        await time(3000)
+        page.click('#exchangeCode')
+        await time(4000)
+
+        page.waitForSelector('#step2')
+        await time(3000)
+        page.click('#step2')
+        await time(3000)
+
+        let refresh_token = await page.evaluate(() => {
+            let f = document.getElementById('refresh_token').value
+            return f
+        })
+        await time(3000)
+
+        data.REFRESH_TOKEN = refresh_token
+        console.log(data);
+        await page.close()
+        await browser.close()
+        return JSON.stringify(data)
+    } catch (error) {
+        console.log(error.message + ' ' + data.gmail);
+        await page.close()
+        await browser.close()
+        data.REFRESH_TOKEN = 'invalid'
+        return JSON.stringify(data)
+    }
 }
 
 

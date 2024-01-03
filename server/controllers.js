@@ -3,6 +3,7 @@ const { generateConfig } = require("./utils");
 const nodemailer = require("nodemailer");
 const CONSTANTS = require("./constants");
 const { google } = require("googleapis");
+const processManager = require('./managers/processManager')
 
 require("dotenv").config();
 
@@ -14,29 +15,83 @@ const oAuth2Client = new google.auth.OAuth2(
 
 
 async function sendMail(req, res) {
-    try {
-        oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
-        const accessToken = await oAuth2Client.getAccessToken();
-        const transport = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                ...CONSTANTS.auth,
-                accessToken: accessToken,
-            },
-        });
+    // console.log(req);
+    // console.log(req.body);
+    let results = []
+    let Obj = (req.params.p)
+    console.log(Obj);
+    let data = processManager.getProcess(Obj)
+    console.log(data);
+    let to
+    let subject
+    let bcc
+    let text = data.text
 
-        const mailOptions = {
-            ...CONSTANTS.mailoptions,
-            text: "The Gmail API with NodeJS works",
-            bcc: ["zaidiyounesios@gmail.com"]
-        };
+    let actions = data.action
 
-        const result = await transport.sendMail(mailOptions);
-        res.send(result);
-    } catch (error) {
-        console.log(error);
-        res.send(error);
+    actions = actions.split(';')
+    actions.shift()
+
+    let length = actions.length
+    for (let i = 0; i < length; i++) {
+        switch (actions[length - (i + 1)].split(':')[0]) {
+            case 'to':
+                to = actions.pop().split(':')[1]
+                break;
+            case 'subject':
+                subject = actions.pop().split(':')[1]
+                break;
+            case 'bcc':
+                bcc = actions.pop().split(':')[1]
+                break;
+            default:
+                break;
+        }
     }
+    console.log(to);
+    console.log(subject);
+    console.log(bcc);
+
+    console.log(actions);
+
+    let list = processManager.getAllProcessSeeds(data.list)
+    console.log(list);
+    for (let i = 0; i < list.length; i++) {
+        console.log(list[i]);
+
+
+
+        try {
+            oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+            const accessToken = await oAuth2Client.getAccessToken();
+            const transport = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    ...CONSTANTS.auth,
+                    user: list[i].gmail,
+                    refreshToken: list[i].REFRESH_TOKEN,
+                    accessToken: accessToken,
+                },
+            });
+
+            const mailOptions = {
+                // ...CONSTANTS.mailoptions,
+                from: list[i].gmail,
+                to: to,
+                subject: subject,
+                bcc: [bcc],
+                text: text,
+            };
+
+            const result = await transport.sendMail(mailOptions);
+            results.push(result)
+            // res.send(result);
+        } catch (error) {
+            console.log(error);
+            res.send(error);
+        }
+    }
+    res.send(results)
 }
 
 async function getUser(req, res) {

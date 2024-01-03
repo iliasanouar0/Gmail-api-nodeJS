@@ -20,7 +20,8 @@ const getDataList = (request, response) => {
     response.status(200).send(data)
 }
 
+
 module.exports = {
     getData,
-    getDataList
+    getDataList,
 }
