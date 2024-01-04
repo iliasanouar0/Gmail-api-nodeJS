@@ -15,8 +15,6 @@ const oAuth2Client = new google.auth.OAuth2(
 
 
 async function sendMail(req, res) {
-    // console.log(req);
-    // console.log(req.body);
     let results = []
     let Obj = (req.params.p)
     console.log(Obj);
@@ -26,12 +24,9 @@ async function sendMail(req, res) {
     let subject
     let bcc
     let text = data.text
-
     let actions = data.action
-
     actions = actions.split(';')
     actions.shift()
-
     let length = actions.length
     for (let i = 0; i < length; i++) {
         switch (actions[length - (i + 1)].split(':')[0]) {
@@ -58,9 +53,6 @@ async function sendMail(req, res) {
     console.log(list);
     for (let i = 0; i < list.length; i++) {
         console.log(list[i]);
-
-
-
         try {
             oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
             const accessToken = await oAuth2Client.getAccessToken();
@@ -73,7 +65,6 @@ async function sendMail(req, res) {
                     accessToken: accessToken,
                 },
             });
-
             const mailOptions = {
                 // ...CONSTANTS.mailoptions,
                 from: list[i].gmail,
@@ -82,16 +73,14 @@ async function sendMail(req, res) {
                 bcc: [bcc],
                 text: text,
             };
-
             const result = await transport.sendMail(mailOptions);
             results.push(result)
-            // res.send(result);
         } catch (error) {
             console.log(error);
             res.send(error);
         }
     }
-    res.send(results)
+    res.status(200).send(results)
 }
 
 async function getUser(req, res) {

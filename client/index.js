@@ -137,7 +137,7 @@ if (REDIRECT_URI == '') {
     <label class="btn btn-outline-secondary" for="Verify">Verify</label>
     </div>
 
-    <div class="row d-none send">
+    <div class="row d-none sendmail">
     <div class="col">
 
     <div class="mb-3">
@@ -182,9 +182,9 @@ if (REDIRECT_URI == '') {
         $(document).on('change', '#Send', event => {
             let status = $(event.target).is(":checked") ? true : false;
             if (status) {
-                $('.send').removeClass('d-none');
+                $('.sendmail').removeClass('d-none');
             } else {
-                $('.send').addClass('d-none');
+                $('.sendmail').addClass('d-none');
             }
         })
         $(document).on('change', '#Authorize', event => {
@@ -313,19 +313,30 @@ if (REDIRECT_URI == '') {
         $(e.target).html('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>')
         console.log(p);
         var settings = {
-            "url": `http://localhost:8000/api/mail/send/${p}`,
-            "method": "GET",
-            "timeout": 0,
-            "headers": {
-                "Access-Control-Allow-Origin": "*"
+            url: `http://localhost:8000/api/mail/send/${p}`,
+            method: "GET",
+            timeout: 0,
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers":
+                    "Origin, X-Requested-With, Content-Type, Accept, Z-Key",
+                "Access-Control-Allow-Methods": "GET, HEAD, POST, PUT, DELETE, OPTIONS",
             },
         };
 
         $.ajax(settings).done(function (response) {
             $(e.target).html('Send')
             console.log(response);
-            $("#result").html(response)
+            console.log($("#result"));
+            let r = ''
+            for (let i = 0; i < response; i++) {
+                r += `<p>${response[i]}</p>`
+                console.log(r);
+                $("#result").html(r)
+            }
         });
+
     })
 }
 

@@ -9,6 +9,14 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
+
+app.use(cors());
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 const routes = require("./routes");
 app.use('/api', routes);
 app.use(bodyParser.json());
@@ -20,16 +28,9 @@ app.use(
 const listManager = require('./managers/listManager')
 const processManager = require('./managers/processManager')
 
-app.use(cors());
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*"); // disabled for security on local
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
 
-app.listen(process.env.PORT, () => {
-  console.log("listening on port " + process.env.PORT);
-});
+
+
 
 const sendToAll = (c, m) => {
   c.forEach(client => {
@@ -292,3 +293,12 @@ app.post("/:name", processManager.addProcess);
 
 app.get("/lists", listManager.getData);
 app.get("/lists/:list", listManager.getDataList);
+
+app.get('/proxy/', (req, res) => {
+  res.status(200).send({ ip: req.ip, remoteAddress: req.socket.remoteAddress })
+})
+
+
+app.listen(process.env.PORT, '0.0.0.0', () => {
+  console.log("listening on port " + process.env.PORT);
+});
