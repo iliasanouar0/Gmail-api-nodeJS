@@ -89,6 +89,11 @@ async function sendMail(req, res) {
 }
 
 async function getUser(req, res) {
+    const oAuth2Client = new google.auth.OAuth2(
+        process.env.CLIENT_ID,
+        process.env.CLIENT_SECRET,
+        process.env.REDIRECT_URI
+    );
     try {
         const url = `https://gmail.googleapis.com/gmail/v1/users/${req.params.email}/profile`;
         const { token } = await oAuth2Client.getAccessToken();
@@ -103,6 +108,11 @@ async function getUser(req, res) {
 }
 
 async function getDrafts(req, res) {
+    const oAuth2Client = new google.auth.OAuth2(
+        process.env.CLIENT_ID,
+        process.env.CLIENT_SECRET,
+        process.env.REDIRECT_URI
+    );
     try {
         const url = `https://gmail.googleapis.com/gmail/v1/users/${req.params.email}/drafts`;
         const { token } = await oAuth2Client.getAccessToken();
@@ -116,6 +126,11 @@ async function getDrafts(req, res) {
 }
 
 async function readMail(req, res) {
+    const oAuth2Client = new google.auth.OAuth2(
+        process.env.CLIENT_ID,
+        process.env.CLIENT_SECRET,
+        process.env.REDIRECT_URI
+    );
     try {
         const url = `https://gmail.googleapis.com/gmail/v1/users/iliasanouar0@gmail.com/messages/${req.params.messageId}`;
         const { token } = await oAuth2Client.getAccessToken();
