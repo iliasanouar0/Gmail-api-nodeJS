@@ -7,14 +7,19 @@ const processManager = require('./managers/processManager')
 
 require("dotenv").config();
 
-const oAuth2Client = new google.auth.OAuth2(
-    process.env.CLIENT_ID,
-    process.env.CLIENT_SECRET,
-    process.env.REDIRECT_URI
-);
+// const oAuth2Client = new google.auth.OAuth2(
+//     process.env.CLIENT_ID,
+//     process.env.CLIENT_SECRET,
+//     process.env.REDIRECT_URI
+// );
 
 
 async function sendMail(req, res) {
+    const oAuth2Client = new google.auth.OAuth2(
+        process.env.CLIENT_ID,
+        process.env.CLIENT_SECRET,
+        process.env.REDIRECT_URI
+    );
     let results = []
     let Obj = (req.params.p)
     console.log(Obj);
